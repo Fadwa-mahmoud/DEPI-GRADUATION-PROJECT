@@ -1,6 +1,6 @@
 # Egyptian Used-Phone Price Intelligence
 
-A DEPI graduation project that follows the stages in the 10-day plan: safe evaluation and baselines (S0), model-key extraction (S1), price modeling (S2), and the planned data-quality and closing work.
+A DEPI graduation project organized in the order of the 10-day plan: S0 data preparation and baseline, followed by S1 model-key extraction and later modeling and project wrap-up.
 
 ## Repository layout
 
@@ -13,11 +13,18 @@ A DEPI graduation project that follows the stages in the 10-day plan: safe evalu
 ├── docs/                    # project planning, literature review, requirements
 ├── notebooks/
 │   ├── 01_S0_split_and_baseline.ipynb
-│   └── archive/              # original exploratory notebook, retained for history
+│   ├── 02_end_of_stage1_inspect_data.ipynb
+│   └── archive/              # earlier exploratory notebook, retained for history
 ├── src/evaluation/          # reusable evaluation utilities
 ├── requirements.txt
 └── README.md
 ```
+
+## Notebook order
+
+1. **S0 baseline:** `notebooks/01_S0_split_and_baseline.ipynb` is the baseline notebook originally uploaded as `task2.ipynb`. It covers the S0 data split and baseline workflow.
+2. **S1 model extraction:** `notebooks/02_end_of_stage1_inspect_data.ipynb` is the later stage notebook. It contains brand/model extraction work through Lenovo and also has an LG section after Lenovo. Keep this notebook after S0 in the project sequence.
+3. `notebooks/archive/00_S0_initial_inspection.ipynb` preserves the earlier `inspect_data.ipynb` exploratory work for reference; it is not the primary entry point for the staged workflow.
 
 ## S0 workflow
 
@@ -31,7 +38,7 @@ A DEPI graduation project that follows the stages in the 10-day plan: safe evalu
 ## Plan order
 
 - **S0 — Safe evaluation and baselines:** normalization, grouped split, frozen test set, baseline ladder and metrics.
-- **S1 — Model-key extraction:** gold labels, brand rules, integration, and accuracy review.
+- **S1 — Model-key extraction:** gold labels, brand rules, integration, and accuracy review. The current stage notebook includes content through Lenovo and an additional LG section.
 - **S2 onward:** modeling, feature/data-quality stages, and closing deliverables as listed in the project plan.
 
-The original `inspect_data.ipynb` is preserved under `notebooks/archive/` as an early exploratory record. Use the numbered S0 notebook as the current S0 entry point. The status in the planning workbook should be updated by the team as tasks are completed.
+Update the planning workbook as the team completes and reviews each task.
