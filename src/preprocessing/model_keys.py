@@ -1814,10 +1814,55 @@ BRAND_CONFIG["lg"] = {
 }
 
 
+
 def predict_model_key(title, brand, with_rule=False):
     """Predict a canonical model key and, optionally, the rule that matched."""
     brand = str(brand).strip().lower()
+
+    # Handle missing brand using specific title patterns
     if not brand or brand == "nan":
+        title_text = str(title).lower().strip()
+
+        # Xiaomi 17 Ultra
+        if re.search(r"\bmi\s*17\s*ultra\b", title_text):
+            return _prediction_result(
+                "xiaomi 17 ultra",
+                "xiaomi:inferred_mi_17_ultra",
+                with_rule,
+            )
+
+        # Xiaomi Redmi Turbo 4 Pro
+        if re.search(r"\bturbo\s*4\s*pro\b", title_text):
+            return _prediction_result(
+                "xiaomi redmi turbo 4 pro",
+                "xiaomi:inferred_redmi_turbo_4_pro",
+                with_rule,
+            )
+
+        # Huawei Mate 10 Lite written in Arabic
+        if re.search(r"ميت\s*تن\s*لايت", title_text):
+            return _prediction_result(
+                "huawei mate 10 lite",
+                "huawei:arabic_mate_10_lite",
+                with_rule,
+            )
+
+        # Huawei Mate 30 Pro 5G
+        if re.search(r"\bmate\s*30\s*pro\s*5g\b", title_text):
+            return _prediction_result(
+                "huawei mate 30 pro 5g",
+                "huawei:mate_30_pro_5g",
+                with_rule,
+            )
+
+        # Exact title: 17 Pro Max
+        if re.fullmatch(r"17\s*pro\s*max", title_text):
+            return _prediction_result(
+                "apple iphone 17 pro max",
+                "apple:inferred_17_pro_max",
+                with_rule,
+            )
+
         return _prediction_result("unknown", "unknown_brand", with_rule)
 
     if brand == "apple":
@@ -1826,3 +1871,4 @@ def predict_model_key(title, brand, with_rule=False):
         return _prediction_result(model_key, match_rule, with_rule)
 
     return extract_brand_model(title, brand, with_rule=with_rule)
+
