@@ -626,6 +626,7 @@ BRAND_CONFIG["realme"] = {
         (r"جي\s*تي\s*نيو", "gt neo"),
         (r"جي\s*تي", "gt"),
         (r"نوت(?=\s*\d)", "note"),
+         (r"اكس(?=\s|$)", "x"),  
         (r"في(?=\s*\d)", "v"),
 
         # Fix common spelling variations
