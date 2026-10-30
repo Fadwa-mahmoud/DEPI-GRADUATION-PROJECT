@@ -281,6 +281,7 @@ BRAND_CONFIG["samsung"] = {
         (r"\bf\s*(\d{1,3})\b", "f{1}"),
         (r"\bm\s*(\d{1,3})\s*s\b", "m{1}s"),
         (r"\bm\s*(\d{1,3})\s*(ultra|plus)?\b", "m{1} {2}"),
+        (r"\bj\s*(\d{1,2})\sprime\s(\d)\b", "j{1} prime {2}"),
         (r"\bj\s*(\d{1,2})\s*(prime|plus|pro)\b", "j{1} {2}"),   # لاحقة في أي مكان (J7 ... J7 prime)
         (r"\bj\s*(\d{1,2})\b", "j{1}"),
         (r"\b(\d{1,2})\s*fe\b", "s{1} fe"),
@@ -565,6 +566,9 @@ BRAND_CONFIG["honor"] = {
     "rules": [
         # Honor X9c Smart
         (r"\bx\s*(\d{1,2})\s*c\s*smart\b", "x{1}c smart"),
+
+        # Honor X5B PLUS
+        (r"\bx\s*(\d{1,2})\s*(c|b|a|i|d)\s*(plus|pro)\b", "x{1}{2} {3}")
 
         # Honor X series: X6, X6b, X7a, X8c, X9c
         (r"\bx\s*(\d{1,2})\s*(c|b|a|i|d|pro|plus)?\b", "x{1}{2}"),
