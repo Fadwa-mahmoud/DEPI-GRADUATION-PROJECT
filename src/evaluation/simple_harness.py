@@ -2,16 +2,16 @@ from pathlib import Path
 
 import pandas as pd
 
-def make_price_band(price):
+def make_price_band(price, lower_cut=10000, upper_cut=25500):
     if pd.isna(price):
         return "unknown"
-    if price < 10000:
+    if price < lower_cut:
         return "cheap"
-    if price < 25500:
+    if price < upper_cut:
         return "mid"
     return "expensive"
 
-def metrics(df, pred_col):
+def metrics(df, pred_col, price_band_cutoffs=(10000, 25500)):
     required = {"price", "brand", pred_col}
     missing = required.difference(df.columns)
     if missing:
@@ -22,14 +22,20 @@ def metrics(df, pred_col):
         raise ValueError("No rows with both an actual price and a prediction")
 
     scored["error"] = (scored["price"] - scored[pred_col]).abs()
-    scored["price_band"] = scored["price"].apply(make_price_band)
+    lower_cut, upper_cut = price_band_cutoffs
+    if lower_cut >= upper_cut:
+        raise ValueError("price_band_cutoffs must be in ascending order")
+    scored["price_band"] = scored["price"].apply(
+        make_price_band, args=(lower_cut, upper_cut)
+    )
 
     mae = scored["error"].mean()
     medae = scored["error"].median()
     print("Overall -> MAE:", round(mae, 2), "| MedAE:", round(medae, 2))
 
     print("\nBy brand:")
-    print(scored.groupby("brand")["error"].agg(["mean", "median", "count"]))
+    by_brand = scored.assign(_brand=scored["brand"].fillna("unknown")).groupby("_brand")["error"].agg(["mean", "median", "count"])
+    print(by_brand)
 
     print("\nBy price band:")
     print(scored.groupby("price_band")["error"].agg(["mean", "median", "count"]))

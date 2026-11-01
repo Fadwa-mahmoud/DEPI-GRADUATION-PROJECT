@@ -50,10 +50,10 @@ def prepare_text(title, letters=None, aliases=None, pre=None):
 
     text = re.sub(r"\s+", " ", text).strip()
 
-    text = re.sub(r"\bnot\s*(?=\d)", "note ", text)                      # not 10 -> note 10
+    text = re.sub(r"\bnot\s*(?=\d)", "note ", text)  # not 10 -> note 10
     text = re.sub(r"(?<=\d)(pro|max|plus|ultra|lite|mini)\b", r" \1", text)  # 14pro -> 14 pro
-    text = re.sub(r"(?<=\d)bro\b", " pro", text)                           # x3bro -> x3 pro
-    text = re.sub(r"(?<=[a-z])5g\b", " 5g", text)                          # 50s5g -> 50s 5g
+    text = re.sub(r"(?<=\d)bro\b", " pro", text)
+    text = re.sub(r"(?<=[a-z])5g\b", " 5g", text)
 
     for pattern, repl in (pre or []):
         text = re.sub(pattern, repl, text)
