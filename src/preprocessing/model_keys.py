@@ -568,7 +568,7 @@ BRAND_CONFIG["honor"] = {
         (r"\bx\s*(\d{1,2})\s*c\s*smart\b", "x{1}c smart"),
 
         # Honor X5B PLUS
-        (r"\bx\s*(\d{1,2})\s*(c|b|a|i|d)\s*(plus|pro)\b", "x{1}{2} {3}")
+        (r"\bx\s*(\d{1,2})\s*(c|b|a|i|d)\s*(plus|pro)\b", "x{1}{2} {3}"),
 
         # Honor X series: X6, X6b, X7a, X8c, X9c
         (r"\bx\s*(\d{1,2})\s*(c|b|a|i|d|pro|plus)?\b", "x{1}{2}"),
