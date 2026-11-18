@@ -1,54 +1,80 @@
 # Egyptian Used-Phone Price Intelligence
 
-A DEPI graduation project organized by uploaded notebook: Viola's initial inspection, Amr's S0 split and baseline, then Fadwa's S1 model extraction. The plan runs some S0 and S1 tasks in parallel; this notebook order records the files and does not imply that every S0 task must finish before S1 labeling begins.
+A DEPI graduation project for estimating used-phone prices from Egyptian listings. The notebooks are organized by the 10-day plan. Some S0 and S1 tasks run in parallel, so the file order is a navigation guide rather than a claim that every earlier task blocks every later one.
 
 ## Repository layout
 
 ```text
 .
 ├── data/
-│   ├── raw/                 # source CSV; local only
-│   ├── labels/              # hand-labeled gold set
-│   ├── splits/              # validation and development-test partitions
-│   └── processed/           # frozen test, training partition, metrics and S1 output
+│   ├── raw/                 # authorized source CSV; local only
+│   ├── labels/              # gold set and review files
+│   ├── splits/              # validation, development-test, and frozen-test partitions
+│   └── processed/           # generated training data, metrics, and stage outputs
 ├── docs/                    # planning, literature review, requirements
 ├── notebooks/
 │   ├── 00_Viola_initial_inspection.ipynb
 │   ├── 01_Amr_S0_split_and_baseline.ipynb
 │   ├── 02_Fadwa_end_of_stage1_inspect_data.ipynb
-│   └── archive/             # generated combined reference notebooks
+│   ├── 03_Aya_stage2_error_analysis.ipynb
+│   ├── 04_error_analysis_and_remeasure.ipynb
+│   ├── 05_hand_review_unknown_cases.ipynb
+│   ├── 2.1_Family_column.ipynb
+│   ├── 2.1_Features_Pipeline.ipynb
+│   ├── 2.2_Baseline_notebook.ipynb
+│   ├── 2.3_catboost_with_model_key.ipynb
+│   └── archive/             # combined reference notebooks and older copies
 ├── src/evaluation/          # evaluation metrics and experiment logging
-├── src/preprocessing/       # shared normalization and grouped split helpers
+├── src/preprocessing/       # normalization, split helpers, and model-key rules
 ├── requirements.txt
 └── README.md
 ```
 
+## Notebook roadmap
+
+| Order | Notebook | Plan area | Purpose |
+|---|---|---|---|
+| Optional | `00_Viola_initial_inspection.ipynb` | Exploration | Inspect raw listing titles; does not create project splits. |
+| 1 | `01_Amr_S0_split_and_baseline.ipynb` | S0 | Create grouped splits and the frozen test; calculate the initial price baselines. |
+| 2 | `02_Fadwa_end_of_stage1_inspect_data.ipynb` | S1 | Apply the current model-key rules to the training partition and produce Stage 1 outputs. |
+| 3 | `03_Aya_stage2_error_analysis.ipynb` | S1 | Review Gold Set errors and model-key rules. Despite “stage2” in the filename, its content belongs to S1. |
+| 4 | `04_error_analysis_and_remeasure.ipynb` | S1 | Fix selected Gold Set misses and measure the updated rules. |
+| 5 | `05_hand_review_unknown_cases.ipynb` | S1 | Prepare and review unknown or low-confidence validation cases. |
+| 6a | `2.1_Family_column.ipynb` | S2 | Build the phone-family feature from model keys. |
+| 6b | `2.1_Features_Pipeline.ipynb` | S2 | Assemble and encode the modeling features; run after the family step. |
+| 7 | `2.2_Baseline_notebook.ipynb` | S2 | Compare price baselines and TF-IDF/Ridge. |
+| 8 | `2.3_catboost_with_model_key.ipynb` | S2 | Train and evaluate CatBoost price models and price ranges. |
+
+There are two files numbered `01`: `01_Amr_S0_split_and_baseline.ipynb` is the canonical S0 notebook referenced by this guide; `01_S0_split_and_baseline.ipynb` is an alternate copy, not another workflow step. There are also two `2.1` notebooks; run the family-column notebook before the feature-pipeline notebook. The combined notebooks under `notebooks/archive/` are references, not additional steps.
+
 ## Start here
 
-1. Copy the authorized source file `dubizzle_phones_clean.csv` into `data/raw/`. The copy currently found on this machine is `A:\AI\Deep\Scraping\dubizzle_phones_clean.csv`.
+1. Put the authorized source file at `data/raw/dubizzle_phones_clean.csv`. Raw data is local and should not be committed.
 2. Install dependencies with `pip install -r requirements.txt`.
-3. Optionally run `notebooks/00_Viola_initial_inspection.ipynb` to explore titles. It does not write project split files.
-4. Run `notebooks/01_Amr_S0_split_and_baseline.ipynb`. It normalizes titles through the shared helper, creates disjoint train/validation/dev-test/frozen-test groups, measures the global and brand-median baselines, and writes the experiment log.
-5. Run `notebooks/02_Fadwa_end_of_stage1_inspect_data.ipynb`. It reads only the S0 `train_set.csv` and writes predictions under `data/processed/stage1/`; it never rewrites S0 splits or the frozen test.
-6. Open `data/labels/gold_set_template.csv` and hand-label its 200 sampled titles in `gold_model_key`. Follow `data/labels/README.md`, then rerun the S1 notebook to calculate gold-set precision, coverage, rule confidence and error/review files.
+3. Optionally run the Viola inspection notebook.
+4. Run the canonical Amr S0 notebook. It creates disjoint train, validation, development-test, and frozen-test groups and records the split manifest and baseline metrics.
+5. Run the Fadwa S1 notebook. It reads the S0 training partition and writes model-key predictions under `data/processed/stage1/`.
+6. Use `data/labels/gold_set_Aya.csv` for the existing labeled 200-title Gold Set. The template is for preparing a new labeling set. Review and adjust rules in the Aya and remeasurement notebooks, then use the hand-review notebook for validation cases.
+7. For S2, run the family-column notebook, then the feature-pipeline notebook, then the baseline and CatBoost notebooks.
 
-The frozen test is created once. If a later run proposes different `ad_id` values, the S0 helper stops rather than replacing it. Review the source and normalization change, archive the old holdout, and approve a new holdout explicitly before rerunning.
+Follow the dependencies in the spreadsheet plan when tasks run in parallel. Use the Gold Set as the designated S1 rule-tuning set. If a planned task reviews validation or development-test rows, report those results as development evidence. Keep the frozen test untouched until the final evaluation.
 
 ## S0 outputs
 
-- `data/processed/train_set.csv`: only the training partition used by grouped CV.
-- `data/splits/validation.csv` and `data/splits/dev_test.csv`: disjoint development partitions.
-- `data/processed/frozen_test_set.csv`: locked final test, never used during feature/rule development.
+- `data/processed/train_set.csv`: training partition used for model development.
+- `data/splits/validation.csv` and `data/splits/dev_test.csv`: development partitions.
+- `data/processed/frozen_test_set.csv`: locked final test.
 - `data/processed/experiment_log.csv`: baseline MAE and MedAE.
-- `data/processed/split_manifest.json`: source SHA-256, split parameters and partition counts.
+- `data/processed/split_manifest.json`: source hash, split settings, and partition counts.
+
+The frozen test is created once. If a later run proposes different `ad_id` values, the S0 helper stops rather than replacing it. Review the source and normalization change, archive the old holdout, and approve a new holdout explicitly before rerunning.
 
 ## S1 outputs
 
-- `data/processed/stage1/stage1_model_keys.csv`: input rows plus unified `model_key`, `match_rule` and calibrated `confidence` (blank until labels support calibration).
+- `data/processed/stage1/stage1_model_keys.csv`: input rows plus unified `model_key`, `match_rule`, and `confidence`.
 - `data/processed/stage1/coverage_by_brand.csv`.
-- After labels are entered: `gold_set_metrics.csv`, `gold_set_metrics_by_brand.csv`, `gold_set_errors.csv`, and `rule_confidence.csv`.
-- `unknown_low_confidence_review.csv`: up to 100 unknown or low-confidence cases for review.
+- Gold Set reports: `gold_set_metrics.csv`, `gold_set_metrics_by_brand.csv`, `gold_set_errors.csv`, and `rule_confidence.csv`.
+- Review candidates are written under `data/labels/`.
 
-The three numbered notebooks above are the canonical contributor files, in project order. A combined reference notebook, if needed, is kept under `notebooks/archive/`.
+Generated `data/processed/` files and raw data are local artifacts; commit them only when the team deliberately approves doing so.
 
-The final holdout is not opened for S0 baselines or S1 rule development. `data/raw/` and generated `data/processed/` files are local artifacts and should not be committed unless the team deliberately approves them.
