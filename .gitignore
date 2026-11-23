@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.cursor/
+
+# Local source data and generated evaluation artifacts
+/data/raw/
+/data/processed/

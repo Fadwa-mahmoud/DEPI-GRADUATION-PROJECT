@@ -1,0 +1,13 @@
+﻿error_type,count,meaning
+none,123,prediction correct (see notes for caveats)
+wrong_model,2,predicted model wrong
+wrong_brand,1,"listing brand is wrong, model belongs to another brand"
+wrong_variant,1,"right family, wrong year/suffix"
+fake_clone,1,not a real device of that brand
+missing_model,21,"predicted unknown, model identifiable from title"
+ambiguous_variant,9,title cannot decide between variants - open the ad
+too_generic,31,"title has no model info; ""unknown"" is the right answer"
+unidentifiable,13,no usable info in title
+not_a_phone,2,part / tablet / accessory
+not_an_offer,1,"buyer request, not a sale ad"
+TOTAL,205,
