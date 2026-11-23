@@ -1,0 +1,2 @@
+﻿model,loss_function,delta,depth,learning_rate,iterations,best_iteration,validation_MAE
+CatBoostRegressor,Huber,9500,7,0.05,4000,1837,6108.71671
