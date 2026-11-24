@@ -1,0 +1,7 @@
+,precision,recall,f1-score,support
+phone,1.0,0.9629629629629629,0.9811320754716981,189.0
+parts,1.0,1.0,1.0,4.0
+wanted,1.0,1.0,1.0,2.0
+feature_phone,1.0,1.0,1.0,1.0
+tablet,1.0,1.0,1.0,1.0
+other,0.0,0.0,0.0,3.0
