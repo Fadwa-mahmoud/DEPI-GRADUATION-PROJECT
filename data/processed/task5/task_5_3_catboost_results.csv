@@ -1,0 +1,3 @@
+Experiment,Train Samples,Validation Samples,Best Iteration,Validation MAE
+All Listings,5109,1252,455,7384.0
+Phone Only,4732,1155,394,6953.72
