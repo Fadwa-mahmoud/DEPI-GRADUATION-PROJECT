@@ -11,6 +11,7 @@ python -m venv Amr_Model\.venv
 Amr_Model\.venv\Scripts\Activate.ps1
 python -m pip install -r Amr_Model\requirements.txt
 python Amr_Model\run_benchmark.py
+python Amr_Model\feature_selection_experiment.py
 ```
 
 أو شغّل `run_benchmark.py` من مجلد `Amr_Model` بعد تثبيت المتطلبات.
@@ -20,7 +21,9 @@ python Amr_Model\run_benchmark.py
 - `data/Amr_Model_Train.csv` — 5,048 إعلانًا، منها 4,605 مؤهلة للتقييم.
 - `data/Amr_Model_Validation.csv` — 1,249 إعلانًا، منها 1,135 مؤهلة.
 - `run_benchmark.py` — خمس طيات GroupKFold حسب مجموعة العنوان، ومقارنة الوسيط الهرمي وCatBoost وXGBoost (السعر المباشر والهدف اللوغاريتمي).
+- `feature_selection_experiment.py` — مقارنة ablation لمجموعات الميزات الست وكتابة نتائجها وتقرير Plotly.
 - `results/Amr_Model_Report.html` — تقرير Plotly تفاعلي يُنشأ عند التشغيل.
+- `results/Amr_Feature_Selection_Report.html` — تقرير Plotly لمقارنة مجموعات الأعمدة، يُنشأ بتشغيل تجربة الاختيار.
 - ملفات `results/*.csv` و`results/benchmark_results.json` — مقاييس وتوقعات OOF والتحقق وجدول التسعير الانتقائي.
 
 ## آخر نتيجة معروفة
@@ -30,9 +33,11 @@ python Amr_Model\run_benchmark.py
 | النموذج | OOF مجمّع | التحقق |
 |---|---:|---:|
 | الوسيط الهرمي: موديل ← عائلة ← ماركة | **61.48%** | **59.47%** |
-| CatBoost MAE | 51.40% | 48.28% |
+| CatBoost MAE بالميزات المختارة | 53.20% | 48.63% |
 | XGBoost، هدف مباشر | 46.47% | 40.18% |
 | XGBoost، هدف لوغاريتمي | 45.60% | 40.35% |
+
+اختبار حذف الميزات على CatBoost اختار مجموعة `core_identity_specs`: هوية الموديل والعلامة والعائلة والحالة، مع RAM وStorage ومؤشرات معرفة هذه المواصفات. حذف أعمدة المدينة والبطارية والملحقات والإشارات النادرة حسّن OOF بمقدار 1.80 نقطة مئوية والتحقق بمقدار 0.35 نقطة فقط مقارنةً بـCatBoost الكامل. هذا تحسين صغير، ولم يرفع أفضل نتيجة الشاملة فوق الوسيط الهرمي. لم نحذف هذه الأعمدة من XGBoost لأن التجربة لم تختبر حذفها هناك.
 
 أفضل أداء انتقائي كان **82.83% ضمن ±20%** على **17.44%** من الإعلانات المؤهلة في التحقق. يخرج lookup السعر فقط للموديلات ذات 3 إعلانات تدريب على الأقل، وكان اتساق أسعارها في التدريب 85% فأكثر؛ ويمتنع عن التنبؤ للبقية. لذلك هذه ليست دقة 80% على كامل البيانات.
 

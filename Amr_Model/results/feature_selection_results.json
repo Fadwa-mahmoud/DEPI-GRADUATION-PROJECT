@@ -1,0 +1,128 @@
+{
+  "metric_definition": "within_20_pct means absolute relative price error <= 0.20",
+  "selection_basis": "Best grouped training OOF within_20_pct, then lower OOF MAE as tie-breaker.",
+  "train_rows": 4605,
+  "validation_rows": 1135,
+  "folds": 5,
+  "best_feature_set_by_oof": "core_identity_specs",
+  "feature_sets": [
+    {
+      "feature_set": "core_identity_specs",
+      "categorical_features": "model_key_enhanced,brand_enhanced,family,condition",
+      "numeric_features": "storage_gb_model_safe,ram_gb_model_safe,storage_model_safe_known,ram_model_safe_known,condition_known",
+      "oof": {
+        "rows": 4605,
+        "mae_egp": 5159.343169309286,
+        "median_absolute_error_egp": 3022.628344654695,
+        "within_20_pct": 0.5320304017372421,
+        "within_30_pct": 0.6742671009771987
+      },
+      "validation": {
+        "rows": 1135,
+        "mae_egp": 5996.0158509929615,
+        "median_absolute_error_egp": 3208.059938652368,
+        "within_20_pct": 0.4863436123348018,
+        "within_30_pct": 0.6378854625550661
+      }
+    },
+    {
+      "feature_set": "drop_constant_listing_type",
+      "categorical_features": "model_key_enhanced,brand_enhanced,family,condition,loc_city",
+      "numeric_features": "storage_gb_model_safe,ram_gb_model_safe,battery_health_pct,storage_model_safe_known,ram_model_safe_known,condition_known,has_5g,has_warranty,has_box,mentions_exchange,bundle_hint",
+      "oof": {
+        "rows": 4605,
+        "mae_egp": 5257.442413597549,
+        "median_absolute_error_egp": 3129.1368825300706,
+        "within_20_pct": 0.5142236699239957,
+        "within_30_pct": 0.6647122692725299
+      },
+      "validation": {
+        "rows": 1135,
+        "mae_egp": 6002.83641453194,
+        "median_absolute_error_egp": 3424.977646945321,
+        "within_20_pct": 0.4828193832599119,
+        "within_30_pct": 0.6493392070484582
+      }
+    },
+    {
+      "feature_set": "all_current",
+      "categorical_features": "model_key_enhanced,brand_enhanced,family,condition,listing_type_enhanced,loc_city",
+      "numeric_features": "storage_gb_model_safe,ram_gb_model_safe,battery_health_pct,storage_model_safe_known,ram_model_safe_known,condition_known,has_5g,has_warranty,has_box,mentions_exchange,bundle_hint",
+      "oof": {
+        "rows": 4605,
+        "mae_egp": 5238.755340604925,
+        "median_absolute_error_egp": 3114.043285488704,
+        "within_20_pct": 0.5140065146579804,
+        "within_30_pct": 0.6640608034744843
+      },
+      "validation": {
+        "rows": 1135,
+        "mae_egp": 6005.285599796621,
+        "median_absolute_error_egp": 3462.7954892034286,
+        "within_20_pct": 0.4828193832599119,
+        "within_30_pct": 0.6625550660792952
+      }
+    },
+    {
+      "feature_set": "drop_rare_flags",
+      "categorical_features": "model_key_enhanced,brand_enhanced,family,condition,loc_city",
+      "numeric_features": "storage_gb_model_safe,ram_gb_model_safe,battery_health_pct,storage_model_safe_known,ram_model_safe_known,condition_known",
+      "oof": {
+        "rows": 4605,
+        "mae_egp": 5262.125587692235,
+        "median_absolute_error_egp": 3098.4935019174154,
+        "within_20_pct": 0.5109663409337677,
+        "within_30_pct": 0.6634093376764386
+      },
+      "validation": {
+        "rows": 1135,
+        "mae_egp": 6070.689572197875,
+        "median_absolute_error_egp": 3434.1917693586565,
+        "within_20_pct": 0.4775330396475771,
+        "within_30_pct": 0.6378854625550661
+      }
+    },
+    {
+      "feature_set": "identity_only",
+      "categorical_features": "model_key_enhanced,brand_enhanced,family",
+      "numeric_features": "",
+      "oof": {
+        "rows": 4605,
+        "mae_egp": 5845.084207604837,
+        "median_absolute_error_egp": 3223.5492898600696,
+        "within_20_pct": 0.4764386536373507,
+        "within_30_pct": 0.61085776330076
+      },
+      "validation": {
+        "rows": 1135,
+        "mae_egp": 7137.567589093371,
+        "median_absolute_error_egp": 4373.860435536171,
+        "within_20_pct": 0.40440528634361234,
+        "within_30_pct": 0.5885462555066079
+      }
+    },
+    {
+      "feature_set": "family_brand_specs_no_exact_model",
+      "categorical_features": "brand_enhanced,family,condition",
+      "numeric_features": "storage_gb_model_safe,ram_gb_model_safe,storage_model_safe_known,ram_model_safe_known,condition_known",
+      "oof": {
+        "rows": 4605,
+        "mae_egp": 7229.887051527373,
+        "median_absolute_error_egp": 4925.094555121796,
+        "within_20_pct": 0.34267100977198695,
+        "within_30_pct": 0.4866449511400652
+      },
+      "validation": {
+        "rows": 1135,
+        "mae_egp": 8980.674043098705,
+        "median_absolute_error_egp": 4983.110485651105,
+        "within_20_pct": 0.3541850220264317,
+        "within_30_pct": 0.47665198237885464
+      }
+    }
+  ],
+  "warnings": [
+    "Validation has been inspected during prior development; use a fresh holdout for an unbiased final estimate.",
+    "This experiment selects feature groups for CatBoost only; it does not guarantee a target accuracy."
+  ]
+}

@@ -33,12 +33,21 @@ VALIDATION_FILE = DATA_DIR / "Amr_Model_Validation.csv"
 
 TEXT_COL = "title_norm_enhanced"
 EGYPT_MOBILE_PATTERN = r"(?<!\d)(?:(?:\+?20)|0)?1[0125]\d{8}(?!\d)"
-CAT_COLS = ["model_key_enhanced", "brand_enhanced", "family", "condition", "listing_type_enhanced", "loc_city"]
-NUM_COLS = [
+XGB_CAT_COLS = ["model_key_enhanced", "brand_enhanced", "family", "condition", "listing_type_enhanced", "loc_city"]
+XGB_NUM_COLS = [
     "storage_gb_model_safe", "ram_gb_model_safe", "battery_health_pct",
     "storage_model_safe_known", "ram_model_safe_known", "condition_known",
     "has_5g", "has_warranty", "has_box", "mentions_exchange", "bundle_hint",
 ]
+# Chosen by five-fold GroupKFold feature ablation. Sparse/noisy columns and the
+# constant listing_type field did not help CatBoost generalize.
+CATBOOST_CAT_COLS = ["model_key_enhanced", "brand_enhanced", "family", "condition"]
+CATBOOST_NUM_COLS = [
+    "storage_gb_model_safe", "ram_gb_model_safe",
+    "storage_model_safe_known", "ram_model_safe_known", "condition_known",
+]
+CAT_COLS = XGB_CAT_COLS
+NUM_COLS = XGB_NUM_COLS
 MODEL_NAMES = ["hierarchical_median", "catboost_mae", "xgboost_absolute_error", "xgboost_log_target"]
 MIN_SELECTIVE_SUPPORT = 3
 MIN_TRAINING_WITHIN20 = 0.85
@@ -90,11 +99,11 @@ def make_xgboost(log_target: bool = False):
         transformers=[
             ("word", TfidfVectorizer(ngram_range=(1, 2), min_df=2, max_features=30000, sublinear_tf=True), TEXT_COL),
             ("char", TfidfVectorizer(analyzer="char_wb", ngram_range=(3, 5), min_df=2, max_features=40000, sublinear_tf=True), TEXT_COL),
-            ("categorical", OneHotEncoder(handle_unknown="ignore", min_frequency=2), CAT_COLS),
+            ("categorical", OneHotEncoder(handle_unknown="ignore", min_frequency=2), XGB_CAT_COLS),
             ("numeric", Pipeline([
                 ("impute", SimpleImputer(strategy="median", add_indicator=True)),
                 ("scale", StandardScaler(with_mean=False)),
-            ]), NUM_COLS),
+            ]), XGB_NUM_COLS),
         ], remainder="drop", sparse_threshold=1.0,
     )
     regressor = XGBRegressor(
@@ -111,8 +120,8 @@ def make_xgboost(log_target: bool = False):
 
 def catboost_features(fit: pd.DataFrame, score: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     support = fit["model_key_enhanced"].value_counts()
-    x_fit = fit[CAT_COLS + NUM_COLS].copy()
-    x_score = score[CAT_COLS + NUM_COLS].copy()
+    x_fit = fit[CATBOOST_CAT_COLS + CATBOOST_NUM_COLS].copy()
+    x_score = score[CATBOOST_CAT_COLS + CATBOOST_NUM_COLS].copy()
     x_fit["model_support_count_train"] = fit["model_key_enhanced"].map(support).fillna(0).astype(int)
     x_score["model_support_count_train"] = score["model_key_enhanced"].map(support).fillna(0).astype(int)
     return x_fit, x_score
@@ -123,7 +132,7 @@ def fit_catboost(x_fit: pd.DataFrame, y_fit: np.ndarray) -> CatBoostRegressor:
         iterations=350, learning_rate=0.04, depth=6, loss_function="MAE", l2_leaf_reg=6,
         random_seed=42, verbose=False, allow_writing_files=False, thread_count=4,
     )
-    model.fit(x_fit, y_fit, cat_features=CAT_COLS)
+    model.fit(x_fit, y_fit, cat_features=CATBOOST_CAT_COLS)
     return model
 
 
