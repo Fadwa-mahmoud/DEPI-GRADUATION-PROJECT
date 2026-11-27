@@ -1,0 +1,96 @@
+{
+  "metric_definition": "Within ±20% means absolute relative price error <= 0.20.",
+  "training_rows": 4605,
+  "validation_rows": 1135,
+  "training_oof": {
+    "hierarchical_median": {
+      "rows": 4605,
+      "mae_egp": 4499.675895765472,
+      "median_absolute_error_egp": 2499.0,
+      "within_20_pct": 0.6147665580890337,
+      "within_30_pct": 0.7467969598262758
+    },
+    "catboost_mae": {
+      "rows": 4605,
+      "mae_egp": 5238.755340604925,
+      "median_absolute_error_egp": 3114.043285488704,
+      "within_20_pct": 0.5140065146579804,
+      "within_30_pct": 0.6640608034744843
+    },
+    "xgboost_absolute_error": {
+      "rows": 4605,
+      "mae_egp": 6032.105952127231,
+      "median_absolute_error_egp": 3606.947265625,
+      "within_20_pct": 0.46471226927252984,
+      "within_30_pct": 0.6154180238870792
+    },
+    "xgboost_log_target": {
+      "rows": 4605,
+      "mae_egp": 6183.028049875729,
+      "median_absolute_error_egp": 3601.322265625,
+      "within_20_pct": 0.4560260586319218,
+      "within_30_pct": 0.6251900108577633
+    }
+  },
+  "validation": {
+    "hierarchical_median": {
+      "rows": 1135,
+      "mae_egp": 5328.129515418502,
+      "median_absolute_error_egp": 2900.0,
+      "within_20_pct": 0.5947136563876652,
+      "within_30_pct": 0.7286343612334801
+    },
+    "catboost_mae": {
+      "rows": 1135,
+      "mae_egp": 6005.285599796621,
+      "median_absolute_error_egp": 3462.7954892034286,
+      "within_20_pct": 0.4828193832599119,
+      "within_30_pct": 0.6625550660792952
+    },
+    "xgboost_absolute_error": {
+      "rows": 1135,
+      "mae_egp": 8717.0602941303,
+      "median_absolute_error_egp": 4334.099609375,
+      "within_20_pct": 0.4017621145374449,
+      "within_30_pct": 0.5444933920704845
+    },
+    "xgboost_log_target": {
+      "rows": 1135,
+      "mae_egp": 8740.420934359512,
+      "median_absolute_error_egp": 4343.041015625,
+      "within_20_pct": 0.4035242290748899,
+      "within_30_pct": 0.5321585903083701
+    }
+  },
+  "best_all_rows_by_training_oof": "hierarchical_median",
+  "selective_lookup": {
+    "threshold": {
+      "minimum_exact_model_training_support": 3,
+      "minimum_training_within20_rate": 0.85
+    },
+    "training_oof": {
+      "rows": 547,
+      "mae_egp": 3499.926873857404,
+      "median_absolute_error_egp": 2000.0,
+      "within_20_pct": 0.8446069469835467,
+      "within_30_pct": 0.9122486288848263,
+      "eligible_rows": 4605,
+      "selected_rows": 547,
+      "coverage_pct": 11.878393051031487
+    },
+    "validation": {
+      "rows": 198,
+      "mae_egp": 3664.0050505050503,
+      "median_absolute_error_egp": 2000.0,
+      "within_20_pct": 0.8282828282828283,
+      "within_30_pct": 0.8737373737373737,
+      "eligible_rows": 1135,
+      "selected_rows": 198,
+      "coverage_pct": 17.444933920704848
+    }
+  },
+  "warnings": [
+    "Price is the target and is not an input to any price regressor.",
+    "Validation has been inspected during project development; confirm final metrics on a fresh holdout."
+  ]
+}
